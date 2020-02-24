@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import Properties
+import Integrals
 
 C_a     = 0.484         #[m]
 l_a     = 1.691         #[m]
@@ -17,12 +19,9 @@ E       = 73100000000   #[Pa] http://asm.matweb.com/search/SpecificMaterial.asp?
 G       = 28000000000   #[Pa] http://asm.matweb.com/search/SpecificMaterial.asp?bassnum=MA2024T3 
 
 #Parameters that should be taken from others code:
-z_tilde = -0.09056059254067199      #[m] 
-I_zz    = 5.815938957599147e-06     #[m^4] 
-I_yy    = 4.4539232840124055e-05    #[m^4]
-J       = I_zz+I_yy                 #[m^4]
-int4    = 2                         #[N*m^3]
-
+z_tilde     = Properties.Properties.Shear_center(1)         #[m] 
+I_zz, I_yy  = Properties.Properties.MOI(1)                  #[m^4] 
+J           = Properties.Properties.torsional_stiffness(1)  #[m^4]
 
 #So, rows are equations and columns are variables, just like in linear algebra.
 
@@ -53,13 +52,13 @@ def M_y_t(x):
     return M_yf[:-1]
 
 def M_z_t(x):
-    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, P*np.sin(theta), 1])
+    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, P*np.sin(theta), Integrals.int2(x)*1000])
     M_zf    = dist(x)*(dist(x)>=0)*M_zm
     M_zf[12]= M_zf[12]+M_zf[13]
     return M_zf[:-1]
 
 def S_y_t(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, np.sin(theta)*P, 1])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, np.sin(theta)*P, Integrals.int1(x)*1000])
     S_yf    = (dist(x)>=0)*S_ym
     S_yf[12]= S_yf[12]+S_yf[13]
     return S_yf[:-1]
@@ -70,30 +69,12 @@ def S_z_t(x):
     S_zf[12]= S_zf[12]+S_zf[13]
     return S_zf[:-1]
 
-'''
-M_y     = np.array([-l_a+x_1, -np.cos(theta)*(l_a-x_2+x_a/2), -l_a+x_2, -l_a+x_3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-M_y_r   = -P*np.cos(theta)*(l_a-x_2-x_a/2)
-
-M_z     = np.array([0, np.sin(theta)*(l_a-x_2+x_a/2), 0, 0, l_a-x_1, l_a-x_2, l_a-x_3, 0, 0, 0, 0, 0, 0, 0])
-M_z_r   = P*np.sin(theta)*(l_a-x_2-x_a/2) 
-#I still need to add the result of the integration
-
-S_y     = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
-S_y_r   = P*np.sin(theta)
-#I still need to add the result of the integration
-
-S_z     = np.array([-1, -np.cos(theta), -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-S_z_r   = -P*np.cos(theta)
-
-T       = np.array([0, h_a/2*np.cos(theta)-(h_a/2-z_tilde)*np.sin(theta), 0, 0, z_tilde, z_tilde, z_tilde, 0, 0, 0, 0, 0, 0, 0])
-'''
-
 #So here I am puting in vector form the deflection and rotation equations of y, z and theta.
 #There will be two additional values compared to the ones that I already put P and the integral. 
 #These two values should be later separated and added to the right hand side of the equation
 
 def v_def(x): 
-    v       = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, 1/6, 1])
+    v       = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, 1/6, Integrals.int4(x)*1000])
     #The last value should have Zeyad's function of integration in x
     v_2     = -1/E/I_zz*v*dist(x)**3 + np.array([0,0,0,0,0,0,0,x,1,0,0,0,0,0])
     v_2[12] = v_2[12] + v_2[13]
@@ -145,3 +126,4 @@ A = np.array([M_y_t(l_a)[:-1], M_z_t(l_a)[:-1], S_y_t(l_a)[:-1], S_z_t(l_a)[:-1]
 bf = np.array([M_y_t(l_a)[-1], M_z_t(l_a)[-1], S_y_t(l_a)[-1], S_z_t(l_a)[-1], T_t(l_a)[-1], BC_vx1_r, BC_vx2_r, BC_vx3_r, BC_wx1_r, BC_wx2_r, BC_wx3_r, BC_wxac1_r])
 
 print(np.linalg.solve(A,bf))
+print(M_y_t(l_a))

@@ -38,16 +38,16 @@ class Properties:
         self.x3 =  x3 # m
         self.xa =  xa # m
         self.ha =  ha # m
-        self.tsk = tsk/1000  # m
-        self.tsp = tsp/1000  # m
-        self.tst = tst/1000  # m
-        self.hst = hst/1000   # m
-        self.wst = wst/1000   # m
+        self.tsk = tsk  # m
+        self.tsp = tsp  # m
+        self.tst = tst  # m
+        self.hst = hst   # m
+        self.wst = wst   # m
         self.nst = nst  # -
         self.d1 =  d1# m
         self.d3 =  d3 # m
-        self.theta = m.radians(theta)  # rad
-        self.P = P*1000  # N
+        self.theta = theta  # rad
+        self.P = P  # N
         Val_list = np.array([["Ca",self.Ca],["la",self.la],["x1",self.x1],["x2",self.x2],["x3",self.x3],["xa",self.xa],["ha",self.ha],
                              ["tsk",self.tsk],["tsp",self.tsp],["tst",self.tst],["hst",self.hst],["wst",self.wst],["nst",self.nst],
                              ["d1",self.d1],["d3",self.d3],["theta",self.theta],["P",self.P]])
@@ -89,7 +89,7 @@ class Properties:
         y_coord = 0
         z_loc = (self.ha/2 - 2*(self.ha/2)/(m.pi))*m.pi*(self.ha/2)*self.tsk + (self.ha/2)*self.ha*self.tsp + (((abs((self.ha/2)-self.Ca)/2))+self.ha/2)*2*np.sqrt((self.ha/2.)**2 + (self.Ca - self.ha/2.)**2.)*self.tsk
         area_st = (self.hst + self.wst)*self.tst
-        for i in dist_stringers[:7]:
+        for i in dist_stringers[:int(self.nst/2 + 1)]:
             z_loc += -2*i[0]*area_st
 
         z_area = m.pi*(self.ha/2)*self.tsk + self.ha*self.tsp + 2*np.sqrt((self.ha/2.)**2 + (self.Ca - self.ha/2.)**2.)*self.tsk + self.nst*area_st
@@ -134,9 +134,31 @@ class Properties:
         return Izz_tot, Iyy_tot
 
     def total_area(self):
+        length_schuin = np.sqrt((self.ha/2.)**2 + (self.Ca - self.ha/2.)**2.) 
+        area1 = np.pi*(self.ha/2)*self.tsk + self.ha*self.tsp
+        area2= 2*(length_schuin*self.tsk)
+        stringers = self.nst*(self.hst*self.tst+self.wst*self.tst)
+        return area1 + area2 + stringers
+    
+    def torsional_stiffness(self): 
+        length_schuin = np.sqrt((self.ha/2.)**2 + (self.Ca - self.ha/2.)**2.) 
         area1 = 0.5*np.pi*(self.ha/2)**2
-        area2= (self.Ca-(self.ha/2))*(self.ha/2)*0.5
-        return area1 + 2*area2
+        area2 = (self.Ca-(self.ha/2))*(self.ha/2) 
+
+        x1 = 1/(2*area1)*((1/self.tsk)*m.pi*(self.ha/2)+(1/self.tsp)*self.ha)
+        x2 = -1/(2*area1)*(self.ha/self.tsp)
+        x3 = -1/(2*area2)*(self.ha/self.tsp)
+        x4 = 1/(2*area2)*((1/self.tsk)*2*length_schuin + self.ha/self.tsp)
+
+        matrix = np.array([[2*area1, 2*area2, 0],[x1, x2, -1],[x3, x4,-1]])
+        b = [1, 0, 0]
+
+        x = np.linalg.solve(matrix, b)
+
+
+        d_dz = (x[2])
+        J = 1/(d_dz)
+        return J
     
     def Shear_center(self):
         def summation(start,stop):
@@ -212,9 +234,3 @@ class Properties:
         
         return (Moment-self.ha/2), 0
 
-test = Properties(1)
-Izz_tot, Iyy_tot = test.MOI()
-
-print(f"Izz is {Izz_tot} and Iyy is {Iyy_tot}")
-print()
-print("The correct values are Izz =  5.8159389575991465e-06 and Iyy = 4.363276766019503e-05")
