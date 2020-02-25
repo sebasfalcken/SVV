@@ -1,6 +1,6 @@
 # Please do not change anything in code before getting back to me
 # ----------------- Imports -----------------
-from Properties1 import Properties
+from Properties import Properties
 import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
@@ -142,7 +142,7 @@ z_n = np.linspace(z[0], z[-1], n_chord)                             # z values o
 
 for station in range(len(x)):                                       # for each spanwise station of the 41
     load_i = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
-    load_station = np.append(load_station, integrate(load_i, z_n[0],  z_n[-1], n_chord))    # q(x)
+    load_station = np.append(load_station, integrate(load_i, z_n[0],  z_n[-1], n_chord))    # q(x) tilde
 
 
 # ----------------- Spanwise Discretization -----------------
@@ -158,54 +158,85 @@ l_a = x[-1]
 z_sc, x_sc = Properties(1).Shear_center()
 
 
-I1 = np.asarray([])
+Q1 = np.asarray([])
 counter = 1
 for i in x_n:
-    I1 = np.append(I1, integrate(load_i_n[0:counter], 0, i, counter))
+    Q1 = np.append(Q1, integrate(load_i_n[0:counter], 0, i, counter))
     counter += 1
 
-I2 = np.asarray([])
+Q2 = np.asarray([])
 counter = 1
 for i in x_n:
-    I2 = np.append(I2, integrate(I1[0:counter], 0, i, counter))
+    Q2 = np.append(Q2, integrate(Q1[0:counter], 0, i, counter))
     counter += 1
 
-I3 = np.asarray([])
+Q3 = np.asarray([])
 counter = 1
 for i in x_n:
-    I3 = np.append(I3, integrate(I2[0:counter], 0, i, counter))
+    Q3 = np.append(Q3, integrate(Q2[0:counter], 0, i, counter))
     counter += 1
 
-I4 = np.asarray([])
+Q4 = np.asarray([])
 counter = 1
 for i in x_n:
-    I4 = np.append(I4, integrate(I3[0:counter], 0, i, counter))
+    Q4 = np.append(Q4, integrate(Q3[0:counter], 0, i, counter))
     counter += 1
 
 
-def int1(x):
+Tau = np.asarray([])
+for station in range(len(x)):                                       # for each spanwise station of the 41
+    load_i = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
+    Tau = np.append(Tau, integrate(load_i * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
+
+
+Tau1 = np.asarray([])
+counter = 1
+for i in x_n:
+    Tau1 = np.append(Tau1, integrate(Tau[0:counter], 0, i, counter))
+    counter += 1
+
+Tau2 = np.asarray([])
+for i in x_n:
+    Tau2 = np.append(Tau2, integrate(Tau1[0:counter], 0, i, counter))
+    counter += 1
+
+
+def q1(x):
 
     idx = (np.abs(x_n - x)).argmin()        # index
 
-    return I1[idx]
+    return Q1[idx]
 
 
-def int2(x):
+def q2(x):
     idx = (np.abs(x_n - x)).argmin()        # index
 
-    return I2[idx]
+    return Q2[idx]
 
 
-def int3(x):
+def q3(x):
     idx = (np.abs(x_n - x)).argmin()        # index
 
-    return I3[idx]
+    return Q3[idx]
 
 
-def int4(x):
+def q4(x):
     idx = (np.abs(x_n - x)).argmin()        # index
 
-    return I4[idx]
+    return Q4[idx]
+
+
+def tau1(x):
+    idx = (np.abs(x_n - x)).argmin()        # index
+
+    return Tau1[idx]
+
+
+def tau2(x):
+    idx = (np.abs(x_n - x)).argmin()        # index
+
+    return Tau2[idx]
+
 
 # -----------------Testing -----------------
 
@@ -219,19 +250,5 @@ def int4(x):
 #        title='2D Aileron Loading')
 
 # plt.show()                                                   PLOTS ALL FIGURES
-
-i1 = integrate(load_i_n, x[0], x[-1], n_span + 1)
-print("i1 = " + str(i1))
-
-i2 = integrate(I1, x[0], x[-1], n_span)
-print("i2 = " + str(i2))
-
-i3 = integrate(I2, x[0], x[-1], n_span)
-print("i3 = " + str(i3))
-
-i4 = integrate(I3, x[0], x[-1], n_span)
-print("i4 = " + str(i4))
-
-
 
 # Please do not change anything in code before getting back to me
