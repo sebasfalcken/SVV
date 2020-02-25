@@ -186,7 +186,7 @@ for i in x_n:
 Tau = np.asarray([])
 for station in range(len(x)):                                       # for each spanwise station of the 41
     load_i = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
-    Tau = np.append(Tau, integrate(load_i * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
+    Tau = np.append(Tau, integrate(-load_i * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
 
 
 Tau1 = np.asarray([])
@@ -239,7 +239,7 @@ def tau2(x):
 
 
 # -----------------Testing -----------------
-
+plt.close("all")
 # z_n = np.linspace(z[0], z[-1], 1000)
 # loadd = load_array[:, 20]   # 0 to 40
 # load_z = interpolate(z_n, z, loadd)
