@@ -144,7 +144,8 @@ def M_z(x):
     return np.sum(dist(x)*(dist(x)>=0)*M_zm*R_f_1)
 
 def T_r(x):
-    return
+    T_f     = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau1(x)*1000])
+    return np.sum((dist(x)>=0)*T_f*R_f_1)
 
 def S_y(x):
     S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -np.sin(theta)*P, -Aerodynamic_Load.q1(x)*1000])
