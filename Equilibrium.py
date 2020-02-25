@@ -41,7 +41,7 @@ def dist(x):
     #This will return the Macaulay term for each of the variables according to an x value. 
 
 def T_t(x):
-    T_m     = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau1(x)*1000])
+    T_m     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau1(x)*1000])
     T_f     = (dist(x)>=0)*T_m
     T_f[12] = T_f[12]+T_f[13]
     return T_f[:-1]
@@ -59,13 +59,13 @@ def M_z_t(x):
     return M_zf[:-1]
 
 def S_y_t(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, np.sin(theta)*P, Aerodynamic_Load.q1(x)*1000])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, P*np.sin(theta), Aerodynamic_Load.q1(x)*1000])
     S_yf    = (dist(x)>=0)*S_ym
     S_yf[12]= S_yf[12]+S_yf[13]
     return S_yf[:-1]
 
 def S_z_t(x):
-    S_zm    = np.array([-1, -np.cos(theta), -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, -P*np.cos(theta), 0])
+    S_zm    = np.array([-1, -np.cos(theta), -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, -np.cos(theta)*P, 0])
     S_zf    = (dist(x)>=0)*S_zm
     S_zf[12]= S_zf[12]+S_zf[13]
     return S_zf[:-1]
@@ -85,7 +85,7 @@ def w_def_t(x):
     return -1/E/I_yy*w*(dist(x)*(dist(x)>=0))**3 + np.array([0,0,0,0,0,0,0,0,0,x,1,0,0,0])
 
 def th_rot_t(x):
-    th      = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau2(x)*1000])
+    th      = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, +h_a/2+z_tilde, 0, 0, 0, 0, 0,(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau2(x)*1000])
     th_2    = 1/G/J*th*dist(x)*(dist(x)>=0) + np.array([0,0,0,0,0,0,0,0,0,0,0,1,0,0]) #vector of 14 elements
     th_2[12]= th_2[12]+th_2[13]
     return  th_2[:-1] #Last value is the right hand side of the equation
@@ -126,7 +126,6 @@ A = np.array([M_y_t(l_a)[:-1], M_z_t(l_a)[:-1], S_y_t(l_a)[:-1], S_z_t(l_a)[:-1]
 bf = np.array([M_y_t(l_a)[-1], M_z_t(l_a)[-1], S_y_t(l_a)[-1], S_z_t(l_a)[-1], T_t(l_a)[-1], BC_vx1_r, BC_vx2_r, BC_vx3_r, BC_wx1_r, BC_wx2_r, BC_wx3_r, BC_wxac1_r])
 
 R_f     = (np.linalg.solve(A,bf)) #Reaction forces
-#print(R_f)
 R_f_1   = np.append(R_f, np.array([1, 1]))
 
 def th_rot(x):
