@@ -20,6 +20,11 @@ Mz      = []
 for i in range(N):
     Mz  = np.append(Mz, Equilibrium.M_z(x_i[i]))
 
+Tr      = []
+for i in range(N):
+    Tr  = np.append(Tr, Equilibrium.T(x_i[i]))
+
+
 plt.figure()
 plt.plot(x_i,My)
 plt.show()

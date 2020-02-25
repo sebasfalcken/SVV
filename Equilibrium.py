@@ -143,6 +143,9 @@ def M_z(x):
     M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load.q2(x)*1000])
     return np.sum(dist(x)*(dist(x)>=0)*M_zm*R_f_1)
 
+def T_r(x):
+    return
+
 def S_y(x):
     S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -np.sin(theta)*P, -Aerodynamic_Load.q1(x)*1000])
     return np.sum((dist(x)>=0)*S_ym*R_f_1)
@@ -158,6 +161,9 @@ def v_def(x):
 def w_def(x):
     w = np.array([-1/6, -np.cos(theta)/6, -1/6, -1/6, 0, 0, 0, 0, 0, 0, 0, 0, 1/6*P*np.cos(theta),0])
     return np.sum(-1/E/I_yy*R_f_1*w*(dist(x)>=0)*dist(x)**3)+R_f_1[9]*x+R_f_1[10]
+
+
+
 '''
 print(M_y(l_a))
 print(M_z(l_a))

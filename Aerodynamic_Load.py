@@ -239,7 +239,7 @@ def tau2(x):
 
 
 # -----------------Testing -----------------
-
+plt.close('all')
 # z_n = np.linspace(z[0], z[-1], 1000)
 # loadd = load_array[:, 20]   # 0 to 40
 # load_z = interpolate(z_n, z, loadd)
