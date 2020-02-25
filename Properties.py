@@ -234,3 +234,7 @@ class Properties:
         
         return (Moment-self.ha/2), 0
 
+test = Properties(1)
+Izz_tot, Iyy_tot = test.MOI()
+J = test.torsional_stiffness()
+shear_center_z, shear_center_y = test.Shear_center()

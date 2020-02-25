@@ -214,7 +214,10 @@ class Properties:
 
 test = Properties(1)
 Izz_tot, Iyy_tot = test.MOI()
+shear_center_z, shear_center_y = test.Shear_center()
 
+'''
 print(f"Izz is {Izz_tot} and Iyy is {Iyy_tot}")
 print()
 print("The correct values are Izz =  5.8159389575991465e-06 and Iyy = 4.363276766019503e-05")
+'''
