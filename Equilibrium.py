@@ -2,7 +2,7 @@
 
 import numpy as np
 import Properties
-import Integrals
+import Aerodynamic_Load
 
 C_a     = 0.484         #[m]
 l_a     = 1.691         #[m]
@@ -41,7 +41,7 @@ def dist(x):
     #This will return the Macaulay term for each of the variables according to an x value. 
 
 def T_t(x):
-    T_m     = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -1])
+    T_m     = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau1(x)*1000])
     T_f     = (dist(x)>=0)*T_m
     T_f[12] = T_f[12]+T_f[13]
     return T_f[:-1]
@@ -53,13 +53,13 @@ def M_y_t(x):
     return M_yf[:-1]
 
 def M_z_t(x):
-    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, P*np.sin(theta), Integrals.int2(x)*1000])
+    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, P*np.sin(theta), Aerodynamic_Load.q2(x)*1000])
     M_zf    = dist(x)*(dist(x)>=0)*M_zm
     M_zf[12]= M_zf[12]+M_zf[13]
     return M_zf[:-1]
 
 def S_y_t(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, np.sin(theta)*P, Integrals.int1(x)*1000])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, np.sin(theta)*P, Aerodynamic_Load.q1(x)*1000])
     S_yf    = (dist(x)>=0)*S_ym
     S_yf[12]= S_yf[12]+S_yf[13]
     return S_yf[:-1]
@@ -75,7 +75,7 @@ def S_z_t(x):
 #These two values should be later separated and added to the right hand side of the equation
 
 def v_def_t(x): 
-    v       = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, 1/6*np.sin(theta)*P, Integrals.int4(x)*1000])
+    v       = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, 1/6*np.sin(theta)*P, Aerodynamic_Load.q4(x)*1000])
     v_2     = -1/E/I_zz*v*(dist(x)*(dist(x)>=0))**3 + np.array([0,0,0,0,0,0,0,x,1,0,0,0,0,0])
     v_2[12] = v_2[12] + v_2[13]
     return v_2[:-1] #Last value is the right hand side of the equation
@@ -85,7 +85,7 @@ def w_def_t(x):
     return -1/E/I_yy*w*(dist(x)*(dist(x)>=0))**3 + np.array([0,0,0,0,0,0,0,0,0,x,1,0,0,0])
 
 def th_rot_t(x):
-    th      = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -1])
+    th      = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau2(x)*1000])
     th_2    = 1/G/J*th*dist(x)*(dist(x)>=0) + np.array([0,0,0,0,0,0,0,0,0,0,0,1,0,0]) #vector of 14 elements
     th_2[12]= th_2[12]+th_2[13]
     return  th_2[:-1] #Last value is the right hand side of the equation
@@ -126,11 +126,11 @@ A = np.array([M_y_t(l_a)[:-1], M_z_t(l_a)[:-1], S_y_t(l_a)[:-1], S_z_t(l_a)[:-1]
 bf = np.array([M_y_t(l_a)[-1], M_z_t(l_a)[-1], S_y_t(l_a)[-1], S_z_t(l_a)[-1], T_t(l_a)[-1], BC_vx1_r, BC_vx2_r, BC_vx3_r, BC_wx1_r, BC_wx2_r, BC_wx3_r, BC_wxac1_r])
 
 R_f     = (np.linalg.solve(A,bf)) #Reaction forces
-print(R_f)
+#print(R_f)
 R_f_1   = np.append(R_f, np.array([1, 1]))
 
 def th_rot(x):
-    th      = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -1])
+    th      = np.array([0, -h_a/2*np.cos(theta)-z_tilde*np.sin(theta), 0, 0, -h_a/2-z_tilde, -h_a/2-z_tilde, -h_a/2-z_tilde, 0, 0, 0, 0, 0,(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau2(x)*1000])
     th_f    = 1/G/J*th*dist(x)*(dist(x)>=0)*R_f_1 #The integral and the P value are still present after this calculation is done
     th_f[11]= R_f[11]
     return np.sum(th_f)
@@ -140,11 +140,11 @@ def M_y(x):
     return np.sum(dist(x)*(dist(x)>=0)*M_ym*R_f_1)
 
 def M_z(x):
-    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Integrals.int2(x)*1000])
+    M_zm    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load.q2(x)*1000])
     return np.sum(dist(x)*(dist(x)>=0)*M_zm*R_f_1)
 
 def S_y(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -np.sin(theta)*P, -Integrals.int1(x)*1000])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -np.sin(theta)*P, -Aerodynamic_Load.q1(x)*1000])
     return np.sum((dist(x)>=0)*S_ym*R_f_1)
 
 def S_z(x):
@@ -152,13 +152,15 @@ def S_z(x):
     return np.sum((dist(x)>=0)*S_zm*R_f_1)
 
 def v_def(x):
-    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*P*np.sin(theta), -Integrals.int4(x)*1000])
+    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*P*np.sin(theta), -Aerodynamic_Load.q4(x)*1000])
     return np.sum(-1/E/I_zz*R_f_1*v*(dist(x)>=0)*dist(x)**3)+R_f_1[7]*x+R_f_1[8]
     
 def w_def(x):
     w = np.array([-1/6, -np.cos(theta)/6, -1/6, -1/6, 0, 0, 0, 0, 0, 0, 0, 0, 1/6*P*np.cos(theta),0])
     return np.sum(-1/E/I_yy*R_f_1*w*(dist(x)>=0)*dist(x)**3)+R_f_1[9]*x+R_f_1[10]
-
+'''
 print(M_y(l_a))
 print(M_z(l_a))
-print(dist(l_a)*(dist(l_a)>=0))
+print(M_z_t(l_a))
+print((dist(l_a)>=0))
+'''
