@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 25 16:05:28 2020
-
-@author: Sebastian Falcken
-"""
 
 import numpy as np
 import Equilibrium
 import matplotlib.pyplot as plt
+
+#%%
 
 N=10000
 x_i         = np.linspace(0,Equilibrium.l_a,N)
@@ -40,9 +37,9 @@ w           = []
 for i in range(N):
     w       = np.append(w, Equilibrium.w_def(x_i[i]))
 
-theta       = []
+theta1       = []
 for i in range(N):
-    theta   = np.append(theta, Equilibrium.th_rot(x_i[i]))
+    theta1   = np.append(theta1, Equilibrium.th_rot(x_i[i]))
 
 
 plt.figure()
@@ -74,5 +71,5 @@ plt.plot(x_i,w)
 plt.show()
 
 plt.figure()
-plt.plot(x_i,theta)
+plt.plot(x_i,theta1)
 plt.show()

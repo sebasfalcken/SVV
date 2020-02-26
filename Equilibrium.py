@@ -101,7 +101,6 @@ A   = np.array([M_y_t, M_z_t, S_y_t, S_z_t, T_t, BC_1, BC_2, BC_3, BC_4, BC_5, B
 b   = np.array([M_y_t_r, M_z_t_r, S_y_t_r, S_z_t_r, T_t_r, BC_1_r, BC_2_r, BC_3_r, BC_4_r, BC_5_r, BC_6_r, BC_7_r])
 R   = np.linalg.solve(A,b)
 R1  = np.append(R,[1,1])
-print(R)
 
 def M_y(x):
     M1  = np.array([1, np.cos(theta),1,1,0,0,0,0,0,0,0,0,-P*np.cos(theta),0])
@@ -113,24 +112,25 @@ def M_z(x):
 
 def T_r(x):
     T_f     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load.tau1(x)*1000])
-    return np.sum((dist(x)>=0)*T_f*R1)
+    return np.sum((dist1(x)>=0)*T_f*R1)
 
 def S_y(x):
     S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load.q1(x)*1000])
     return np.sum((dist1(x)>=0)*S_ym*R1)
 
 def S_z(x):
-    S_zm    = np.array([1, np.cos(theta), -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, -np.cos(theta)*P, 0])
-    return np.sum((dist(x)>=0)*S_zm*R1)
+    S_zm    = np.array([1, np.cos(theta), 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, -np.cos(theta)*P, 0])
+    return np.sum((dist1(x)>=0)*S_zm*R1)
 
 def v_def(x):
     v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*np.sin(theta)*P, -Aerodynamic_Load.q4(x)*1000])
-    return np.sum(-1/E/I_zz*R1*v*(dist(x)>=0)*dist(x)**3)+R1[7]*x+R1[8]
+    return np.sum(-1/E/I_zz*R1*v*(dist1(x)>=0)*dist1(x)**3)+R1[7]*x+R1[8]
     
 def w_def(x):
     w = np.array([1/6, np.cos(theta)/6,1/6,1/6,0,0,0,0,0,0,0,0,-P*np.sin(theta)/6,0])
-    return np.sum(-1/E/I_yy*R1*w*(dist(x)>=0)*dist(x)**3)+R1[9]*x+R1[10]
+    return np.sum(-1/E/I_yy*R1*w*(dist1(x)>=0)*dist1(x)**3)+R1[9]*x+R1[10]
 
 def th_rot(x):
     th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load.tau2(x)*1000])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
+
