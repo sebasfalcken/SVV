@@ -38,13 +38,13 @@ z_tilde     = Properties.test.Shear_center()[0]        #[m]
 #Additional assumptions:
 #- The change in theta from actuator I to actuator II is negligible for the P components calculation
 
-def dist(x):
+def dist(x): #Distance matrix for Macaulay functions
     return np.array([x-x_1, x-x_2+x_a/2, x-x_2, x-x_3, x-x_1, x-x_2, x-x_3, 0, 0, 0, 0, 0])
 
-def dist1(x):
+def dist1(x): #Distance matrix when you add the P value and the integrator
     return np.array([x-x_1, x-x_2+x_a/2, x-x_2, x-x_3, x-x_1, x-x_2, x-x_3, 0, 0, 0, 0, 0, x-x_2-x_a/2, 1])
 
-M_y_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])*dist(l_a)
+M_y_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])*dist(l_a) 
 M_y_t_r = -P*np.cos(theta)*(l_a-x_2-x_a/2)
 
 M_z_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])*dist(l_a)
@@ -76,28 +76,28 @@ def th_rot_t(x):
     th_a[11]= 1
     return (th_a[:12], np.sum(th_a[:-2]))
 
-BC_1    = v_def_t(x_1)[0]+th_rot_t(x_1)[0]*(z_tilde-h_a/2)
-BC_1_r  = v_def_t(x_1)[1]+th_rot_t(x_1)[1]*(z_tilde-h_a/2)
+BC1     = v_def_t(x_1)[0]-th_rot_t(x_1)[0]*(z_tilde+h_a/2)
+BC_1_r  = v_def_t(x_1)[1]-th_rot_t(x_1)[1]*(z_tilde+h_a/2) + d_1
 
-BC_2    = v_def_t(x_2)[0]+th_rot_t(x_2)[0]*(z_tilde-h_a/2)
-BC_2_r  = v_def_t(x_2)[1]+th_rot_t(x_2)[1]*(z_tilde-h_a/2)
+BC2     = v_def_t(x_2)[0]-th_rot_t(x_2)[0]*(z_tilde+h_a/2)
+BC_2_r  = v_def_t(x_2)[1]-th_rot_t(x_2)[1]*(z_tilde+h_a/2)
 
-BC_3    = v_def_t(x_3)[0]+th_rot_t(x_3)[0]*(z_tilde-h_a/2)
-BC_3_r  = v_def_t(x_3)[1]+th_rot_t(x_3)[1]*(z_tilde-h_a/2)
+BC3     = v_def_t(x_3)[0]-th_rot_t(x_3)[0]*(z_tilde+h_a/2)
+BC_3_r  = v_def_t(x_3)[1]-th_rot_t(x_3)[1]*(z_tilde+h_a/2) +d_3
 
-BC_4    = w_def_t(x_1)[0]
+BC4     = w_def_t(x_1)[0]
 BC_4_r  = w_def_t(x_1)[1]
 
-BC_5    = w_def_t(x_2)[0]
+BC5     = w_def_t(x_2)[0]
 BC_5_r  = w_def_t(x_2)[1]
 
-BC_6    = w_def_t(x_3)[0]
+BC6     = w_def_t(x_3)[0]
 BC_6_r  = w_def_t(x_3)[1]
 
-BC_7    = w_def_t(x_2-x_a/2)[0]*np.cos(theta)+v_def_t(x_2-x_a/2)[0]*np.sin(theta)+th_rot_t(x_2-x_a/2)[0]*z_tilde*np.sin(theta)
+BC7     = w_def_t(x_2-x_a/2)[0]*np.cos(theta)+v_def_t(x_2-x_a/2)[0]*np.sin(theta)+th_rot_t(x_2-x_a/2)[0]*z_tilde*np.sin(theta)
 BC_7_r  = w_def_t(x_2-x_a/2)[1]*np.cos(theta)+v_def_t(x_2-x_a/2)[1]*np.sin(theta)+th_rot_t(x_2-x_a/2)[1]*z_tilde*np.sin(theta)
 
-A   = np.array([M_y_t, M_z_t, S_y_t, S_z_t, T_t, BC_1, BC_2, BC_3, BC_4, BC_5, BC_6, BC_7])
+A   = np.array([M_y_t, M_z_t, S_y_t, S_z_t, T_t, BC1, BC2, BC3, BC4, BC5, BC6, BC7])
 b   = np.array([M_y_t_r, M_z_t_r, S_y_t_r, S_z_t_r, T_t_r, BC_1_r, BC_2_r, BC_3_r, BC_4_r, BC_5_r, BC_6_r, BC_7_r])
 R   = np.linalg.solve(A,b)
 R1  = np.append(R,[1,1])
