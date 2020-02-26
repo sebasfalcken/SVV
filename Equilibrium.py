@@ -44,14 +44,14 @@ def dist(x):
 def dist1(x):
     return np.array([x-x_1, x-x_2+x_a/2, x-x_2, x-x_3, x-x_1, x-x_2, x-x_3, 0, 0, 0, 0, 0, x-x_2-x_a/2, 1])
 
-M_y_t   = np.array([1, np.cos(theta),1,1,0,0,0,0,0,0,0,0])*dist(l_a)
-M_y_t_r = P*np.cos(theta)*(l_a-x_2-x_a/2)
+M_y_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])*dist(l_a)
+M_y_t_r = -P*np.cos(theta)*(l_a-x_2-x_a/2)
 
 M_z_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])*dist(l_a)
 M_z_t_r = P*np.sin(theta)*(l_a-x_2-x_a/2)+Aerodynamic_Load.q2(l_a)*1000
 
-S_z_t   = np.array([1, np.cos(theta),1,1,0,0,0,0,0,0,0,0])
-S_z_t_r = P*np.cos(theta)
+S_z_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])
+S_z_t_r = -P*np.cos(theta)
 
 S_y_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])
 S_y_t_r = P*np.sin(theta)+Aerodynamic_Load.q1(l_a)*1000
@@ -66,7 +66,7 @@ def v_def_t(x):
     return (v_a[:12], np.sum(v_a[:-2]))
 
 def w_def_t(x):
-    w_a     = -np.array([1/6, np.cos(theta)/6,1/6,1/6,0,0,0,0,0,0,0,0,P*np.sin(theta)/6,0])/E/I_yy*(dist1(x)>=0)*dist1(x)**3
+    w_a     = -np.array([-1/6, -np.cos(theta)/6,-1/6,-1/6,0,0,0,0,0,0,0,0,-P*np.sin(theta)/6,0])/E/I_yy*(dist1(x)>=0)*dist1(x)**3
     w_a[9]  = x 
     w_a[10] = 1
     return (w_a[:12], np.sum(w_a[:-2]))
@@ -103,7 +103,7 @@ R   = np.linalg.solve(A,b)
 R1  = np.append(R,[1,1])
 
 def M_y(x):
-    M1  = np.array([1, np.cos(theta),1,1,0,0,0,0,0,0,0,0,-P*np.cos(theta),0])
+    M1  = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0, P*np.cos(theta),0])
     return np.sum(M1*dist1(x)*(dist1(x)>=0)*R1)
 
 def M_z(x):
@@ -119,7 +119,7 @@ def S_y(x):
     return np.sum((dist1(x)>=0)*S_ym*R1)
 
 def S_z(x):
-    S_zm    = np.array([1, np.cos(theta), 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, -np.cos(theta)*P, 0])
+    S_zm    = np.array([-1, -np.cos(theta), -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, np.cos(theta)*P, 0])
     return np.sum((dist1(x)>=0)*S_zm*R1)
 
 def v_def(x):
@@ -127,10 +127,9 @@ def v_def(x):
     return np.sum(-1/E/I_zz*R1*v*(dist1(x)>=0)*dist1(x)**3)+R1[7]*x+R1[8]
     
 def w_def(x):
-    w = np.array([1/6, np.cos(theta)/6,1/6,1/6,0,0,0,0,0,0,0,0,-P*np.sin(theta)/6,0])
+    w = np.array([-1/6, -np.cos(theta)/6,-1/6,-1/6,0,0,0,0,0,0,0,0,P*np.sin(theta)/6,0])
     return np.sum(-1/E/I_yy*R1*w*(dist1(x)>=0)*dist1(x)**3)+R1[9]*x+R1[10]
 
 def th_rot(x):
     th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load.tau2(x)*1000])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
-
