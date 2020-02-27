@@ -38,7 +38,7 @@ crosssection.compute_bending_properties()   # Run the calculations
 ### Auxiliary functions
 """ A plot of the cross-section, to inspect that the stringers have been placed correctly, and 
 that the position of the centroid makes sense. """
-#crosssection.plot_crosssection()     # Plot the cross-section; blue cross is the centroid, red crosses are stringers
+crosssection.plot_crosssection()     # Plot the cross-section; blue cross is the centroid, red crosses are stringers
 
 ### Access to important results
 """" If you desire, you can manually overwrite these values. """
