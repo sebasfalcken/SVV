@@ -270,3 +270,34 @@ _ = Stressobject.q6f(theta)             # Compute the shear flow distribution in
 _ = Stressobject.sigma6f(theta)         # Compute the direct stress distribution in region 6
 _ = Stressobject.vm6(theta)             # Compute the Von Mises stress distribution in region 6
 _, _ = Stressobject.coord6(theta)       # Compute the z,y-coordinates for region 6
+
+#%%
+
+S_y = []
+S_z = []
+M_y = []
+M_z = []
+T_1 = []
+v   = []
+w   = []
+th  = []
+l = np.linspace(0, la, 10000)
+
+for i in l:
+    S_y.append(float(aileron.Sy(i)))
+    S_z.append(float(aileron.Sz(i)))
+    M_y.append(float(aileron.My(i)))
+    M_z.append(float(aileron.Mz(i)))
+    T_1.append(float(aileron.T(i)))
+    v.append(float(aileron.eval(i)[0]))
+    w.append(float(aileron.eval(i)[1]))
+    th.append(float(aileron.eval(i)[2]))
+
+S_y = np.array(S_y)
+S_z = np.array(S_z)
+M_y = np.array(M_y)
+M_z = np.array(M_z)
+T_1 = np.array(T_1)
+v   = np.array(v)
+w   = np.array(w)
+th  = np.array(th)

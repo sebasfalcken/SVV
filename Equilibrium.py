@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-#%%
-
 import numpy as np
 import Properties
 import Aerodynamic_Load
@@ -63,36 +61,36 @@ def v_def_t(x):
     v_a     = -np.array([0, np.sin(theta)/6,0,0,1/6,1/6,1/6,0,0,0,0,0,P*np.cos(theta)/6, Aerodynamic_Load.q4(x)*1000])/E/I_zz*(dist1(x)>=0)*dist1(x)**3
     v_a[7]  = x 
     v_a[8]  = 1
-    return (v_a[:12], np.sum(v_a[:-2]))
+    return (v_a[:12], np.sum(v_a[-2:]))
 
 def w_def_t(x):
     w_a     = -np.array([-1/6, -np.cos(theta)/6,-1/6,-1/6,0,0,0,0,0,0,0,0,-P*np.sin(theta)/6,0])/E/I_yy*(dist1(x)>=0)*dist1(x)**3
     w_a[9]  = x 
     w_a[10] = 1
-    return (w_a[:12], np.sum(w_a[:-2]))
+    return (w_a[:12], np.sum(w_a[-2:]))
 
 def th_rot_t(x):
     th_a    = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load.tau2(x)*1000])/G/J*(dist1(x)>=0)*dist1(x)
     th_a[11]= 1
-    return (th_a[:12], np.sum(th_a[:-2]))
+    return (th_a[:12], np.sum(th_a[-2:]))
 
-BC1     = v_def_t(x_1)[0]-th_rot_t(x_1)[0]*(z_tilde+h_a/2)
-BC_1_r  = v_def_t(x_1)[1]-th_rot_t(x_1)[1]*(z_tilde+h_a/2) + d_1
+BC1     = v_def_t(x_1)[0]+th_rot_t(x_1)[0]*(z_tilde+h_a/2)
+BC_1_r  = v_def_t(x_1)[1]+th_rot_t(x_1)[1]*(z_tilde+h_a/2) + d_1*np.cos(theta)
 
-BC2     = v_def_t(x_2)[0]-th_rot_t(x_2)[0]*(z_tilde+h_a/2)
-BC_2_r  = v_def_t(x_2)[1]-th_rot_t(x_2)[1]*(z_tilde+h_a/2)
+BC2     = v_def_t(x_2)[0]+th_rot_t(x_2)[0]*(z_tilde+h_a/2)
+BC_2_r  = v_def_t(x_2)[1]+th_rot_t(x_2)[1]*(z_tilde+h_a/2)
 
-BC3     = v_def_t(x_3)[0]-th_rot_t(x_3)[0]*(z_tilde+h_a/2)
-BC_3_r  = v_def_t(x_3)[1]-th_rot_t(x_3)[1]*(z_tilde+h_a/2) +d_3
+BC3     = v_def_t(x_3)[0]+th_rot_t(x_3)[0]*(z_tilde+h_a/2)
+BC_3_r  = v_def_t(x_3)[1]+th_rot_t(x_3)[1]*(z_tilde+h_a/2) +d_3*np.cos(theta)
 
 BC4     = w_def_t(x_1)[0]
-BC_4_r  = w_def_t(x_1)[1]
+BC_4_r  = w_def_t(x_1)[1]-d_1*np.sin(theta)
 
 BC5     = w_def_t(x_2)[0]
 BC_5_r  = w_def_t(x_2)[1]
 
 BC6     = w_def_t(x_3)[0]
-BC_6_r  = w_def_t(x_3)[1]
+BC_6_r  = w_def_t(x_3)[1]-d_3*np.sin(theta)
 
 BC7     = w_def_t(x_2-x_a/2)[0]*np.cos(theta)+v_def_t(x_2-x_a/2)[0]*np.sin(theta)+th_rot_t(x_2-x_a/2)[0]*z_tilde*np.sin(theta)
 BC_7_r  = w_def_t(x_2-x_a/2)[1]*np.cos(theta)+v_def_t(x_2-x_a/2)[1]*np.sin(theta)+th_rot_t(x_2-x_a/2)[1]*z_tilde*np.sin(theta)
