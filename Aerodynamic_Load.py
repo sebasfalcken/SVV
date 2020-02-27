@@ -30,7 +30,8 @@ x_mesh, y_mesh = np.meshgrid(x, z)
 fig, ax = plt.subplots()
 ax.plot(x_mesh.flatten(), y_mesh.flatten(), ".")  # ","
 ax.set(xlabel='x [m]', ylabel='z [m]',
-       title='Mesh Grid')
+       title='Original Mesh Grid')
+# plt.savefig("original_meshgrid")
 
 # ----------------- 2D Aileron Loading -----------------
 
@@ -239,7 +240,8 @@ def tau2(x):
 
 
 # -----------------Testing -----------------
-plt.close("all")
+# plt.show()                                                  #  PLOTS ALL FIGURES
+# plt.close("all")
 # z_n = np.linspace(z[0], z[-1], 1000)
 # loadd = load_array[:, 20]   # 0 to 40
 # load_z = interpolate(z_n, z, loadd)
@@ -249,6 +251,13 @@ plt.close("all")
 # ax.set(xlabel='z_n [m]', ylabel='load_z (kN)',
 #        title='2D Aileron Loading')
 
-# plt.show()                                                   PLOTS ALL FIGURES
-
 # Please do not change anything in code before getting back to me
+
+# x_mesh, y_mesh = np.meshgrid(x_n, z_n)
+#
+# fig, ax = plt.subplots()
+# ax.plot(x_mesh.flatten(), y_mesh.flatten(), ",")  # ","
+# ax.set(xlabel='x [m]', ylabel='z [m]',
+#        title='New Mesh Grid')
+# plt.savefig("new_meshgrid")
+# plt.show()
