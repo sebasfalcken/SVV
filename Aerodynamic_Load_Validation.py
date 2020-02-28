@@ -179,12 +179,7 @@ for i in x_n:
     Q4 = np.append(Q4, integrate(Q3[0:counter], 0, i, counter))
     counter += 1
 
-
-Tau = np.asarray([])
-for station in range(len(x_n)):                                     # for each spanwise station
-    # load_i_n = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
-    Tau = np.append(Tau, integrate(-load_array[:, station] * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
-
+Tau = load_i_n * (0.25 * C_a - z_sc)    # q(x) tilde * (z - z tilde)
 
 Tau1 = np.asarray([])
 counter = 1
@@ -193,6 +188,7 @@ for i in x_n:
     counter += 1
 
 Tau2 = np.asarray([])
+counter = 1
 for i in x_n:
     Tau2 = np.append(Tau2, integrate(Tau1[0:counter], 0, i, counter))
     counter += 1
@@ -241,6 +237,4 @@ plt.close("all")
 
 # Please do not change anything in code before getting back to me
 
-# print(tau1(1))
-# print(z_sc)
-# print(-0.25 * 0.605-z_sc)
+print(tau1(1))

@@ -197,6 +197,7 @@ for i in x_n:
     counter += 1
 
 Tau2 = np.asarray([])
+counter = 1
 for i in x_n:
     Tau2 = np.append(Tau2, integrate(Tau1[0:counter], 0, i, counter))
     counter += 1
@@ -227,16 +228,16 @@ def q4(x):
     return Q4[idx]
 
 
-def tau1(x):
-    idx = (np.abs(x_n - x)).argmin()        # index
+# def tau1(x):
+#     idx = (np.abs(x_n - x)).argmin()        # index
+#
+#     return Tau1[idx]
 
-    return Tau1[idx]
 
-
-def tau2(x):
-    idx = (np.abs(x_n - x)).argmin()        # index
-
-    return Tau2[idx]
+# def tau2(x):
+#     idx = (np.abs(x_n - x)).argmin()        # index
+#
+#     return Tau2[idx]
 
 
 # -----------------Testing -----------------
@@ -263,3 +264,5 @@ plt.close("all")
 #        title='New Mesh Grid')
 # plt.savefig("new_meshgrid")
 # plt.show()
+
+print(tau1(1))
