@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import Properties_validation
+<<<<<<< HEAD
 #import Aerodynamic_Load_Verification
+=======
+import Aerodynamic_Load_Validation
+>>>>>>> c4536efc9fb4b79e8cab716ff99c8dd5d3b37370
 #%% CASE 1: BENDING OF THE AILERON WITHOUT ANY LOADS APPLIED
 
 C_a     = 0.605         #[m]
