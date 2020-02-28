@@ -44,7 +44,7 @@ for i in range(len(Validationfiles.x_HL)):
 #%%
 
 plt.figure()
-plt.scatter(Validationfiles.x_HL,w, label="Numerical values")
+plt.scatter(Validationfiles.x_HL,w, label="Numerical values",s=10)
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_bending),label="Validation values",color='red',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$w(x) [mm]$')
@@ -53,7 +53,7 @@ plt.legend()
 plt.show
 
 plt.figure()
-plt.scatter(Validationfiles.x_HL,v, label="Numerical values")
+plt.scatter(Validationfiles.x_HL,v, label="Numerical values",s=10)
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_bending),label="Validation values",color='red',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$v(x) [mm]$')

@@ -62,7 +62,7 @@ for i in range(0, len(coord)):
     coord[i][3] = coord[i][3] - 102.5
 
 for i in range(0, len(coord)):
-    for j in range(1, 3):
+    for j in range(1, 4):
         coord[i][j] = coord[i][j] / 1000
 
 # --------------------- Delete Failed Output Lists -----------
@@ -150,10 +150,11 @@ x = np.asarray(coord[:, 1:2])
 y = np.asarray(coord[:, 2:3])
 z = np.asarray(coord[:, 3:4])               # z should be in m
 stress = np.asarray(tables[2][:, 1:2])
-# max = max(stress)
+
 
 
 # 1
+# max = max(stress)
 # x = x.reshape(108, 61)
 # y = y.reshape(108, 61)
 # z = z.reshape(108, 61)
@@ -170,7 +171,7 @@ stress = np.asarray(tables[2][:, 1:2])
 #
 # ax.plot_surface(x, y, z, facecolors=colors)
 # plt.show()
-
+#
 
 # 2
 

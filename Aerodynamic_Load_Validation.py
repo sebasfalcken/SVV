@@ -1,6 +1,6 @@
 # Please do not change anything in code before getting back to me
 # ----------------- Imports -----------------
-import Properties_validation
+from Properties_validation import Properties
 import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
@@ -152,7 +152,7 @@ load_i_n[:, ] = 5.54                                                  # q(x) for
 
 C_a = z[-1]
 l_a = x[-1]
-z_sc, x_sc = Properties_validation(1).Shear_center()
+z_sc, x_sc = Properties(1).Shear_center()
 
 
 Q1 = np.asarray([])
@@ -180,22 +180,22 @@ for i in x_n:
     counter += 1
 
 
-# Tau = np.asarray([])
-# for station in range(len(x)):                                       # for each spanwise station of the 41
-#     load_i = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
-#     Tau = np.append(Tau, integrate(-load_i * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
-#
-#
-# Tau1 = np.asarray([])
-# counter = 1
-# for i in x_n:
-#     Tau1 = np.append(Tau1, integrate(Tau[0:counter], 0, i, counter))
-#     counter += 1
-#
-# Tau2 = np.asarray([])
-# for i in x_n:
-#     Tau2 = np.append(Tau2, integrate(Tau1[0:counter], 0, i, counter))
-#     counter += 1
+Tau = np.asarray([])
+for station in range(len(x_n)):                                     # for each spanwise station
+    # load_i_n = interpolate(z_n, z, load_array[:, station])            # load array for spanwise station
+    Tau = np.append(Tau, integrate(-load_array[:, station] * (z_n - z_sc), z_n[0],  z_n[-1], n_chord))    # q(x) tilde * (z - z tilde)
+
+
+Tau1 = np.asarray([])
+counter = 1
+for i in x_n:
+    Tau1 = np.append(Tau1, integrate(Tau[0:counter], 0, i, counter))
+    counter += 1
+
+Tau2 = np.asarray([])
+for i in x_n:
+    Tau2 = np.append(Tau2, integrate(Tau1[0:counter], 0, i, counter))
+    counter += 1
 
 
 def q1(x):
@@ -223,40 +223,24 @@ def q4(x):
     return Q4[idx]
 
 
-# def tau1(x):
-#     idx = (np.abs(x_n - x)).argmin()        # index
-#
-#     return Tau1[idx]
-#
-#
-# def tau2(x):
-#     idx = (np.abs(x_n - x)).argmin()        # index
-#
-#     return Tau2[idx]
-#
+def tau1(x):
+    idx = (np.abs(x_n - x)).argmin()        # index
+
+    return Tau1[idx]
+
+
+def tau2(x):
+    idx = (np.abs(x_n - x)).argmin()        # index
+
+    return Tau2[idx]
+
 
 # -----------------Testing -----------------
 # plt.show()                                                  #  PLOTS ALL FIGURES
 plt.close("all")
 
-# z_n = np.linspace(z[0], z[-1], 1000)
-# loadd = load_array[:, 20]   # 0 to 40
-# load_z = interpolate(z_n, z, loadd)
-#
-# fig, ax = plt.subplots()
-# ax.scatter(z_n, load_z)
-# ax.set(xlabel='z_n [m]', ylabel='load_z (kN)',
-#        title='2D Aileron Loading')
-
 # Please do not change anything in code before getting back to me
 
-# PLOTS NEW MESHGRID
-# x_mesh, y_mesh = np.meshgrid(x_n, z_n)
-#
-# fig, ax = plt.subplots()
-# ax.plot(x_mesh.flatten(), y_mesh.flatten(), ",")  # ","
-# ax.set(xlabel='x [m]', ylabel='z [m]',
-#        title='New Mesh Grid')
-# plt.savefig("new_meshgrid")
-# plt.show()
-
+# print(tau1(1))
+# print(z_sc)
+# print(-0.25 * 0.605-z_sc)
