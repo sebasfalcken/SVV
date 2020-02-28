@@ -49,7 +49,6 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_bending),lab
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_bending)-w,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$w(x) [mm]$')
-plt.title('Deflection in z - Bent aileron without aerodynamic load applied')
 plt.legend()
 plt.show
 
@@ -59,7 +58,6 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_bending),lab
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_bending)-v,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$v(x) [mm]$')
-plt.title('Deflection in y - Bent aileron without aerodynamic load applied')
 plt.legend()
 plt.show
 
@@ -69,7 +67,6 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_jam_bent),la
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_jam_bent)-w,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$w(x) [mm]$')
-plt.title('Deflection in z - Bent aileron with jammed actuator and aerodynamic load')
 plt.legend()
 plt.show
 
@@ -79,7 +76,6 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_jam_bent),la
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_jam_bent)-v,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$v(x) [mm]$')
-plt.title('Deflection in y - Bent aileron with jammed actuator and aerodynamic load')
 plt.legend()
 plt.show
 '''
@@ -89,7 +85,6 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_jam_straight
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_z_HL_jam_straight)-w,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$w(x)[mm]$')
-plt.title('Deflection in z - Unbent aileron with jammed actuator and aerodynamic load')
 plt.legend()
 plt.show
 
@@ -99,6 +94,5 @@ plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_jam_straight
 plt.scatter(Validationfiles.x_HL,np.array(Validationfiles.defl_y_HL_jam_straight)-v,label="Error",color='green',s=10)
 plt.xlabel("Aileron span [m]")
 plt.ylabel(r'$v(x) [mm]$')
-plt.title('Deflection in y - Unbent aileron with jammed actuator and aerodynamic load')
 plt.legend()
 plt.show
