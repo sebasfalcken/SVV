@@ -1,6 +1,6 @@
 # Please do not change anything in code before getting back to me
 # ----------------- Imports -----------------
-from Properties import Properties
+import Properties_validation
 import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
@@ -152,7 +152,7 @@ load_i_n[:, ] = 5.54                                                  # q(x) for
 
 C_a = z[-1]
 l_a = x[-1]
-z_sc, x_sc = Properties(1).Shear_center()
+z_sc, x_sc = Properties_validation(1).Shear_center()
 
 
 Q1 = np.asarray([])
