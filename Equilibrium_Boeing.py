@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import Properties_validation
-<<<<<<< HEAD
-#import Aerodynamic_Load_Verification
-=======
 import Aerodynamic_Load_Validation
->>>>>>> c4536efc9fb4b79e8cab716ff99c8dd5d3b37370
 #%% CASE 1: BENDING OF THE AILERON WITHOUT ANY LOADS APPLIED
-
+'''
 C_a     = 0.605         #[m]
 l_a     = 2.661         #[m]
 x_1     = 0.172         #[m]
@@ -135,7 +131,7 @@ def w_def(x):
 def th_rot(x):
     th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), 0])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
-'''
+
 #%% CASE 2: CLASSICAL CASE
 
 C_a     = 0.605         #[m]
@@ -180,19 +176,19 @@ M_y_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])*dist(l_a)
 M_y_t_r = -P*np.cos(theta)*(l_a-x_2-x_a/2)
 
 M_z_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])*dist(l_a)
-M_z_t_r = P*np.sin(theta)*(l_a-x_2-x_a/2)+Aerodynamic_Load_Verification.q2(l_a)*1000
+M_z_t_r = P*np.sin(theta)*(l_a-x_2-x_a/2)+Aerodynamic_Load_Validation.q2(l_a)*1000
 
 S_z_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])
 S_z_t_r = -P*np.cos(theta)
 
 S_y_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])
-S_y_t_r = P*np.sin(theta)+Aerodynamic_Load_Verification.q1(l_a)*1000
+S_y_t_r = P*np.sin(theta)+Aerodynamic_Load_Validation.q1(l_a)*1000
 
 T_t     = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0])
-T_t_r   = (h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P+Aerodynamic_Load_Verification.tau1(l_a)*1000
+T_t_r   = (h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P+Aerodynamic_Load_Validation.tau1(l_a)*1000
 
 def v_def_t(x):
-    v_a     = -np.array([0, np.sin(theta)/6,0,0,1/6,1/6,1/6,0,0,0,0,0,P*np.cos(theta)/6, Aerodynamic_Load_Verification.q4(x)*1000])/E/I_zz*(dist1(x)>=0)*dist1(x)**3
+    v_a     = -np.array([0, np.sin(theta)/6,0,0,1/6,1/6,1/6,0,0,0,0,0,P*np.cos(theta)/6, Aerodynamic_Load_Validation.q4(x)*1000])/E/I_zz*(dist1(x)>=0)*dist1(x)**3
     v_a[7]  = x 
     v_a[8]  = 1
     return (v_a[:12], np.sum(v_a[-2:]))
@@ -204,7 +200,7 @@ def w_def_t(x):
     return (w_a[:12], np.sum(w_a[-2:]))
 
 def th_rot_t(x):
-    th_a    = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Verification.tau2(x)*1000])/G/J*(dist1(x)>=0)*dist1(x)
+    th_a    = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Validation.tau2(x)*1000])/G/J*(dist1(x)>=0)*dist1(x)
     th_a[11]= 1
     return (th_a[:12], np.sum(th_a[-2:]))
 
@@ -239,15 +235,15 @@ def M_y(x):
     return np.sum(M1*dist1(x)*(dist1(x)>=0)*R1)
 
 def M_z(x):
-    M2  = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0, -P*np.sin(theta),-Aerodynamic_Load_Verification.q2(x)*1000])
+    M2  = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0, -P*np.sin(theta),-Aerodynamic_Load_Validation.q2(x)*1000])
     return np.sum(M2*dist1(x)*(dist1(x)>=0)*R1)
 
 def T_r(x):
-    T_f     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load_Verification.tau1(x)*1000])
+    T_f     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load_Validation.tau1(x)*1000])
     return np.sum((dist1(x)>=0)*T_f*R1)
 
 def S_y(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load_Verification.q1(x)*1000])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load_Validation.q1(x)*1000])
     return np.sum((dist1(x)>=0)*S_ym*R1)
 
 def S_z(x):
@@ -255,7 +251,7 @@ def S_z(x):
     return np.sum((dist1(x)>=0)*S_zm*R1)
 
 def v_def(x):
-    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*np.sin(theta)*P, -Aerodynamic_Load_Verification.q4(x)*1000])
+    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*np.sin(theta)*P, -Aerodynamic_Load_Validation.q4(x)*1000])
     return np.sum(-1/E/I_zz*R1*v*(dist1(x)>=0)*dist1(x)**3)+R1[7]*x+R1[8]
     
 def w_def(x):
@@ -263,11 +259,11 @@ def w_def(x):
     return np.sum(-1/E/I_yy*R1*w*(dist1(x)>=0)*dist1(x)**3)+R1[9]*x+R1[10]
 
 def th_rot(x):
-    th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Verification.tau2(x)*1000])
+    th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Validation.tau2(x)*1000])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
 
 #%% CASE 3: UNBENT AILERON
-
+'''
 C_a     = 0.605         #[m]
 l_a     = 2.661         #[m]
 x_1     = 0.172         #[m]
@@ -310,19 +306,19 @@ M_y_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])*dist(l_a)
 M_y_t_r = -P*np.cos(theta)*(l_a-x_2-x_a/2)
 
 M_z_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])*dist(l_a)
-M_z_t_r = P*np.sin(theta)*(l_a-x_2-x_a/2)+Aerodynamic_Load_Verification.q2(l_a)*1000
+M_z_t_r = P*np.sin(theta)*(l_a-x_2-x_a/2)+Aerodynamic_Load_Validation.q2(l_a)*1000
 
 S_z_t   = np.array([-1, -np.cos(theta),-1,-1,0,0,0,0,0,0,0,0])
 S_z_t_r = -P*np.cos(theta)
 
 S_y_t   = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0])
-S_y_t_r = P*np.sin(theta)+Aerodynamic_Load_Verification.q1(l_a)*1000
+S_y_t_r = P*np.sin(theta)+Aerodynamic_Load_Validation.q1(l_a)*1000
 
 T_t     = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0])
-T_t_r   = (h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P+Aerodynamic_Load_Verification.tau1(l_a)*1000
+T_t_r   = (h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P+Aerodynamic_Load_Validation.tau1(l_a)*1000
 
 def v_def_t(x):
-    v_a     = -np.array([0, np.sin(theta)/6,0,0,1/6,1/6,1/6,0,0,0,0,0,P*np.cos(theta)/6, Aerodynamic_Load_Verification.q4(x)*1000])/E/I_zz*(dist1(x)>=0)*dist1(x)**3
+    v_a     = -np.array([0, np.sin(theta)/6,0,0,1/6,1/6,1/6,0,0,0,0,0,P*np.cos(theta)/6, Aerodynamic_Load_Validation.q4(x)*1000])/E/I_zz*(dist1(x)>=0)*dist1(x)**3
     v_a[7]  = x 
     v_a[8]  = 1
     return (v_a[:12], np.sum(v_a[-2:]))
@@ -334,7 +330,7 @@ def w_def_t(x):
     return (w_a[:12], np.sum(w_a[-2:]))
 
 def th_rot_t(x):
-    th_a    = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Verification.tau2(x)*1000])/G/J*(dist1(x)>=0)*dist1(x)
+    th_a    = np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Validation.tau2(x)*1000])/G/J*(dist1(x)>=0)*dist1(x)
     th_a[11]= 1
     return (th_a[:12], np.sum(th_a[-2:]))
 
@@ -369,15 +365,15 @@ def M_y(x):
     return np.sum(M1*dist1(x)*(dist1(x)>=0)*R1)
 
 def M_z(x):
-    M2  = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0, -P*np.sin(theta),-Aerodynamic_Load_Verification.q2(x)*1000])
+    M2  = np.array([0, np.sin(theta),0,0,1,1,1,0,0,0,0,0, -P*np.sin(theta),-Aerodynamic_Load_Validation.q2(x)*1000])
     return np.sum(M2*dist1(x)*(dist1(x)>=0)*R1)
 
 def T_r(x):
-    T_f     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load_Verification.tau1(x)*1000])
+    T_f     = np.array([0, h_a/2*np.cos(theta)+z_tilde*np.sin(theta), 0, 0, h_a/2+z_tilde, h_a/2+z_tilde, h_a/2+z_tilde, 0, 0, 0, 0, 0,-(h_a/2*np.cos(theta)+z_tilde*np.sin(theta))*P, -Aerodynamic_Load_Validation.tau1(x)*1000])
     return np.sum((dist1(x)>=0)*T_f*R1)
 
 def S_y(x):
-    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load_Verification.q1(x)*1000])
+    S_ym    = np.array([0, np.sin(theta), 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, -P*np.sin(theta), -Aerodynamic_Load_Validation.q1(x)*1000])
     return np.sum((dist1(x)>=0)*S_ym*R1)
 
 def S_z(x):
@@ -385,7 +381,7 @@ def S_z(x):
     return np.sum((dist1(x)>=0)*S_zm*R1)
 
 def v_def(x):
-    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*np.sin(theta)*P, -Aerodynamic_Load_Verification.q4(x)*1000])
+    v   = np.array([0, np.sin(theta)/6, 0, 0, 1/6, 1/6, 1/6, 0, 0, 0, 0, 0, -1/6*np.sin(theta)*P, -Aerodynamic_Load_Validation.q4(x)*1000])
     return np.sum(-1/E/I_zz*R1*v*(dist1(x)>=0)*dist1(x)**3)+R1[7]*x+R1[8]
     
 def w_def(x):
@@ -393,6 +389,6 @@ def w_def(x):
     return np.sum(-1/E/I_yy*R1*w*(dist1(x)>=0)*dist1(x)**3)+R1[9]*x+R1[10]
 
 def th_rot(x):
-    th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Verification.tau2(x)*1000])
+    th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Validation.tau2(x)*1000])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
- '''
+ 

@@ -20,9 +20,9 @@ G       = 28000000000   #[Pa] http://asm.matweb.com/search/SpecificMaterial.asp?
 
 #Parameters that should be taken from others code:
 
-I_zz, I_yy  = Properties.test.MOI()
-J           = Properties.test.torsional_stiffness()  #[m^4]
-z_tilde     = Properties.test.Shear_center()[0]        #[m] 
+I_zz, I_yy  = Properties.Properties(1).MOI()
+J           = Properties.Properties(1).torsional_stiffness()  #[m^4]
+z_tilde     = Properties.Properties(1).Shear_center()[0]        #[m] 
 
 #So, rows are equations and columns are variables, just like in linear algebra.
 
@@ -92,8 +92,8 @@ BC_5_r  = w_def_t(x_2)[1]
 BC6     = w_def_t(x_3)[0]
 BC_6_r  = w_def_t(x_3)[1]-d_3*np.sin(theta)
 
-BC7     = w_def_t(x_2-x_a/2)[0]*np.cos(theta)+v_def_t(x_2-x_a/2)[0]*np.sin(theta)+th_rot_t(x_2-x_a/2)[0]*z_tilde*np.sin(theta)
-BC_7_r  = w_def_t(x_2-x_a/2)[1]*np.cos(theta)+v_def_t(x_2-x_a/2)[1]*np.sin(theta)+th_rot_t(x_2-x_a/2)[1]*z_tilde*np.sin(theta)
+BC7     = w_def_t(x_2-x_a/2)[0]*np.cos(theta)+v_def_t(x_2-x_a/2)[0]*np.sin(theta)-th_rot_t(x_2-x_a/2)[0]*np.abs(z_tilde)*np.sin(theta)
+BC_7_r  = w_def_t(x_2-x_a/2)[1]*np.cos(theta)+v_def_t(x_2-x_a/2)[1]*np.sin(theta)-th_rot_t(x_2-x_a/2)[1]*np.abs(z_tilde)*np.sin(theta)
 
 A   = np.array([M_y_t, M_z_t, S_y_t, S_z_t, T_t, BC1, BC2, BC3, BC4, BC5, BC6, BC7])
 b   = np.array([M_y_t_r, M_z_t_r, S_y_t_r, S_z_t_r, T_t_r, BC_1_r, BC_2_r, BC_3_r, BC_4_r, BC_5_r, BC_6_r, BC_7_r])
