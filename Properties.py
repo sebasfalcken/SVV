@@ -30,6 +30,8 @@ class Properties:
             Vallist = [Ca,la,x1,x2,x3,xa,ha,tsk,tsp,tst,hst,wst,nst]
             index = Vallist.index(min(Vallist))
             raise Exception(f"{names[index]} cannot be smaller than zero")
+        if nst%2 == 0:
+            raise Exception(f"Amount of stringers cannot be smaller than even")
             
         self.Ca =  Ca  # m
         self.la =  la  # m
@@ -167,7 +169,7 @@ class Properties:
             B_i = 0
             area_st = (self.hst + self.wst)*self.tst
 
-            for i in dist_stringers[:7]:
+            for i in dist_stringers[:int(self.nst/2+1)]:
                 if abs(start) <= abs(i[0]) and abs(i[0]) <= abs(stop):
                     B_i += area_st*i[1]
 
@@ -205,10 +207,11 @@ class Properties:
         dist_stringers = self.St_plcmnt()
 
         q1_shear = shear(1,Izz,self.tsk,(self.ha/2)**2,integrateSin,0,m.pi/2,0,self.ha/2,0)
-        q2_shear = shear(1,Izz,self.tsp,1,integrate,0,self.ha/2,-5,-5,0)
+        #q2_shear = shear(1,Izz,self.tsp,1,integrate,0,self.ha/2,-5,-5,0)
+        q2_shear = (1/Izz)*self.tsk*(self.ha/2)
         q3_shear = shear(1,Izz,self.tsk,self.ha/2 - (self.ha/2)/length_schuin,integrate,0,length_schuin,self.ha/2,self.Ca,q1_shear+q2_shear)
         q4_shear = shear(1,Izz,self.tsk,(self.ha/2)/length_schuin,integrate,0,length_schuin,self.ha/2,self.Ca,q3_shear)
-        q5_shear = shear(1,Izz,self.tsp,1,integrate,0,-(self.ha/2),-5,-5,0)
+        q5_shear = (1/Izz)*self.tsk*(-self.ha/2)
         q6_shear = shear(1,Izz,self.tsk,(self.ha/2)**2,integrateSin,-m.pi/2,0,0,self.ha/2,q4_shear-q5_shear)
 
         x1 = (self.ha/2)*((m.pi/2)*2) + self.ha
@@ -234,7 +237,26 @@ class Properties:
         
         return (Moment-self.ha/2), 0
 
-test = Properties(1)
-Izz_tot, Iyy_tot = test.MOI()
-J = test.torsional_stiffness()
-shear_center_z, shear_center_y = test.Shear_center()
+
+if __name__ == "__main__":
+    test = Properties(1)
+    z_coord, y_coord = test.Centroid()
+    print(f"The z coord of the centroid is {z_coord}")
+    print(f"The y coord of the centroid is {y_coord}")
+    print()
+    stringers = test.St_plcmnt()
+    Izz,Iyy = test.MOI()
+    print(f"The Izz is {Izz}")
+    print(f"The Iyy is {Iyy}")
+    print()
+    total_area = test.total_area()
+    print(f"Total area is {total_area}")
+    print()
+    J = test.torsional_stiffness()
+    print(f"The Torsional stiffness is {J}")
+    print()
+    z_shear, y_shear = test.Shear_center()
+    print(f"The z coord of the shear center is {z_shear}")
+    print(f"The y coord of the shear center is {y_shear}")
+    print()
+    print(f"The array with sttingers are {stringers}")

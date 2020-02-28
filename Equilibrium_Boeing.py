@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import Properties_validation
-import Aerodynamic_Load_Verification
+#import Aerodynamic_Load_Verification
 #%% CASE 1: BENDING OF THE AILERON WITHOUT ANY LOADS APPLIED
 
 C_a     = 0.605         #[m]
@@ -271,8 +271,8 @@ x_2     = 1.211         #[m]
 x_3     = 2.591         #[m]
 x_a     = 0.35          #[m]
 h_a     = 0.205         #[m]
-d_1     = 0.01154       #[m]
-d_3     = 0.0184        #[m]
+d_1     = 0             #[m]
+d_3     = 0             #[m]
 theta   = 28*np.pi/180  #[rad]
 P       = 97400         #[N]
 E       = 73100000000   #[Pa] http://asm.matweb.com/search/SpecificMaterial.asp?bassnum=MA2024T3 
@@ -391,4 +391,4 @@ def w_def(x):
 def th_rot(x):
     th= np.array([0,h_a/2*np.cos(theta)+z_tilde*np.sin(theta),0,0,z_tilde+h_a/2,z_tilde+h_a/2,z_tilde+h_a/2,0,0,0,0,0, -P*(h_a/2*np.cos(theta)+z_tilde*np.sin(theta)), Aerodynamic_Load_Verification.tau2(x)*1000])
     return np.sum(th/G/J*(dist1(x)>=0)*dist1(x)*R1)+R1[11]
-'''
+ '''
