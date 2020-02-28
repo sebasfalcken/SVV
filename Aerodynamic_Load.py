@@ -241,7 +241,8 @@ def tau2(x):
 
 # -----------------Testing -----------------
 # plt.show()                                                  #  PLOTS ALL FIGURES
-# plt.close("all")
+plt.close("all")
+
 # z_n = np.linspace(z[0], z[-1], 1000)
 # loadd = load_array[:, 20]   # 0 to 40
 # load_z = interpolate(z_n, z, loadd)
@@ -253,6 +254,7 @@ def tau2(x):
 
 # Please do not change anything in code before getting back to me
 
+# PLOTS NEW MESHGRID
 # x_mesh, y_mesh = np.meshgrid(x_n, z_n)
 #
 # fig, ax = plt.subplots()
