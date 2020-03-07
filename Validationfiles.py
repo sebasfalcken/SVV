@@ -115,7 +115,7 @@ for i in range(0,len(coord)):
         defl_z_HL_jam_bent.append(tables[4][i][4])
         defl_z_HL_jam_straight.append(tables[5][i][4])
 
-'''
+
 # --------------------- Y Delfection -------------------------
 fig, ax = plt.subplots()
 ax.scatter(x_HL, defl_y_HL_bending,s=10,color='red')
@@ -155,8 +155,6 @@ ax.set(xlabel='x location [m]', ylabel='Deflection in z',
     title='Validation Data Deflection Jam_Straight')
 plt.show()
         
-      
-'''
 
 
 
